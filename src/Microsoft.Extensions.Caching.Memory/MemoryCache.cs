@@ -8,6 +8,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Internal;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
 namespace Microsoft.Extensions.Caching.Memory
@@ -28,13 +29,14 @@ namespace Microsoft.Extensions.Caching.Memory
         private readonly Action<CacheEntry> _entryExpirationNotification;
 
         private readonly MemoryCacheOptions _options;
+        private readonly ILogger<MemoryCache> _logger;
         private DateTimeOffset _lastExpirationScan;
 
         /// <summary>
         /// Creates a new <see cref="MemoryCache"/> instance.
         /// </summary>
         /// <param name="optionsAccessor">The options of the cache.</param>
-        public MemoryCache(IOptions<MemoryCacheOptions> optionsAccessor)
+        public MemoryCache(IOptions<MemoryCacheOptions> optionsAccessor, ILogger<MemoryCache> logger)
         {
             if (optionsAccessor == null)
             {
@@ -53,6 +55,7 @@ namespace Microsoft.Extensions.Caching.Memory
             }
 
             _lastExpirationScan = _options.Clock.UtcNow;
+            _logger = logger;
         }
 
         /// <summary>
