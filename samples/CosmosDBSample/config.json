@@ -1,0 +1,6 @@
+﻿{
+  "EndPoint": "",
+  "Key": "",
+  "DatabaseId": "CosmosDBSample",
+  "CollectionId": "CacheEntries"
+}
