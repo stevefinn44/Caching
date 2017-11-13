@@ -24,18 +24,23 @@ namespace CosmosDBSample
             await cache.SetAsync(
                 key,
                 value,
-                new DistributedCacheEntryOptions().SetSlidingExpiration(TimeSpan.FromSeconds(10)));
+                new DistributedCacheEntryOptions().SetSlidingExpiration(TimeSpan.FromSeconds(5)).SetAbsoluteExpiration(TimeSpan.FromSeconds(10)));
             Console.WriteLine("Set");
 
-            Console.WriteLine("Getting value from cache");
-            value = await cache.GetAsync(key);
-            if (value != null)
+            for (int i = 0; i < 5; i++)
             {
-                Console.WriteLine("Retrieved: " + Encoding.UTF8.GetString(value, 0, value.Length));
-            }
-            else
-            {
-                Console.WriteLine("Not Found");
+                Console.WriteLine("Getting value from cache");
+                value = await cache.GetAsync(key);
+                if (value != null)
+                {
+                    Console.WriteLine("Retrieved: " + Encoding.UTF8.GetString(value, 0, value.Length));
+                }
+                else
+                {
+                    Console.WriteLine("Not Found");
+                }
+
+                Console.ReadKey();
             }
 
             Console.WriteLine("Refreshing value in cache");

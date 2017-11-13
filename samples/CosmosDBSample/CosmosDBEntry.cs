@@ -1,34 +1,42 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using Microsoft.Azure.Documents;
-using Microsoft.Extensions.Caching.Distributed;
 
 namespace CosmosDBSample
 {
     internal class CosmosDBEntry : Document
     {
-        public DistributedCacheEntryOptions CacheEntryOptions
+        public DateTimeOffset? AbsoluteExpiration
         {
             get
             {
-                return GetPropertyValue<DistributedCacheEntryOptions>("cacheEntryOptions");
+                return GetPropertyValue<DateTimeOffset?>("abs");
             }
             set
             {
-                SetPropertyValue("cacheEntryOptions", value);
+                SetPropertyValue("abs", value);
+            }
+        }
+        public TimeSpan? SlidingExpiration
+        {
+            get
+            {
+                return GetPropertyValue<TimeSpan?>("sld");
+            }
+            set
+            {
+                SetPropertyValue("sld", value);
             }
         }
 
-        public byte[] Payload
+        public byte[] Data
         {
             get
             {
-                return GetPropertyValue<byte[]>("payload");
+                return GetPropertyValue<byte[]>("data");
             }
             set
             {
-                SetPropertyValue("payload", value);
+                SetPropertyValue("data", value);
             }
         }
     }

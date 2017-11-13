@@ -93,14 +93,14 @@ namespace Microsoft.Extensions.Caching.Redis
 
             var creationTime = DateTimeOffset.UtcNow;
 
-            var absoluteExpiration = GetAbsoluteExpiration(creationTime, options);
+            var absoluteExpiration = options.GetAbsoluteExpiration(creationTime);
 
             var result = _cache.ScriptEvaluate(SetScript, new RedisKey[] { _instance + key },
                 new RedisValue[]
                 {
                         absoluteExpiration?.Ticks ?? NotPresent,
                         options.SlidingExpiration?.Ticks ?? NotPresent,
-                        GetExpirationInSeconds(creationTime, absoluteExpiration, options) ?? NotPresent,
+                        options.GetExpirationInSeconds(creationTime, absoluteExpiration) ?? NotPresent,
                         value
                 });
         }
@@ -128,14 +128,14 @@ namespace Microsoft.Extensions.Caching.Redis
 
             var creationTime = DateTimeOffset.UtcNow;
 
-            var absoluteExpiration = GetAbsoluteExpiration(creationTime, options);
+            var absoluteExpiration = options.GetAbsoluteExpiration(creationTime);
 
             await _cache.ScriptEvaluateAsync(SetScript, new RedisKey[] { _instance + key },
                 new RedisValue[]
                 {
                         absoluteExpiration?.Ticks ?? NotPresent,
                         options.SlidingExpiration?.Ticks ?? NotPresent,
-                        GetExpirationInSeconds(creationTime, absoluteExpiration, options) ?? NotPresent,
+                        options.GetExpirationInSeconds(creationTime, absoluteExpiration) ?? NotPresent,
                         value
                 });
         }
@@ -374,43 +374,6 @@ namespace Microsoft.Extensions.Caching.Redis
                 await _cache.KeyExpireAsync(_instance + key, expr);
                 // TODO: Error handling
             }
-        }
-
-        private static long? GetExpirationInSeconds(DateTimeOffset creationTime, DateTimeOffset? absoluteExpiration, DistributedCacheEntryOptions options)
-        {
-            if (absoluteExpiration.HasValue && options.SlidingExpiration.HasValue)
-            {
-                return (long)Math.Min(
-                    (absoluteExpiration.Value - creationTime).TotalSeconds,
-                    options.SlidingExpiration.Value.TotalSeconds);
-            }
-            else if (absoluteExpiration.HasValue)
-            {
-                return (long)(absoluteExpiration.Value - creationTime).TotalSeconds;
-            }
-            else if (options.SlidingExpiration.HasValue)
-            {
-                return (long)options.SlidingExpiration.Value.TotalSeconds;
-            }
-            return null;
-        }
-
-        private static DateTimeOffset? GetAbsoluteExpiration(DateTimeOffset creationTime, DistributedCacheEntryOptions options)
-        {
-            if (options.AbsoluteExpiration.HasValue && options.AbsoluteExpiration <= creationTime)
-            {
-                throw new ArgumentOutOfRangeException(
-                    nameof(DistributedCacheEntryOptions.AbsoluteExpiration),
-                    options.AbsoluteExpiration.Value,
-                    "The absolute expiration value must be in the future.");
-            }
-            var absoluteExpiration = options.AbsoluteExpiration;
-            if (options.AbsoluteExpirationRelativeToNow.HasValue)
-            {
-                absoluteExpiration = creationTime + options.AbsoluteExpirationRelativeToNow;
-            }
-
-            return absoluteExpiration;
         }
 
         public void Dispose()
