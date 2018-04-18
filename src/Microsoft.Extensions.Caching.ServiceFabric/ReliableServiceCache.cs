@@ -18,7 +18,7 @@ namespace Microsoft.Extensions.Caching.ServiceFabric
 
         private readonly ISystemClock _systemClock;
         private readonly TimeSpan _expiredItemsDeletionInterval;
-        private DateTimeOffset _lastExpirationScan;
+       // private DateTimeOffset _lastExpirationScan;
         private readonly Action _deleteExpiredCachedItemsDelegate;
         private readonly TimeSpan _defaultSlidingExpiration;
 
