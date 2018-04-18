@@ -12,6 +12,7 @@ namespace Microsoft.Extensions.Caching.SqlServer
     /// </summary>
     public class SqlServerCacheOptions : IOptions<SqlServerCacheOptions>
     {
+
         /// <summary>
         /// An abstraction to represent the clock of a machine in order to enable unit testing.
         /// </summary>

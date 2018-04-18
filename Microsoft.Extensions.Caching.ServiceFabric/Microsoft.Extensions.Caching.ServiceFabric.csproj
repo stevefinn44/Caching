@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Internal.AspNetCore.Sdk" Version="2.1.0-preview3-17018" />
+    <PackageReference Include="Microsoft.Extensions.Options" Version="2.1.0-preview3-32233" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\src\Microsoft.Extensions.Caching.Abstractions\Microsoft.Extensions.Caching.Abstractions.csproj" />
+  </ItemGroup>
+
+</Project>
